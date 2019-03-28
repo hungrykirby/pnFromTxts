@@ -27,7 +27,7 @@ class ReadFiles:
                 username = os.path.basename(f2)
                 self.users_data.append({"username": username, "contents": []})
                 for f3 in level3:
-                    with open(f3) as contens:
+                    with open(f3, 'r', encoding='CP932', errors='ignore') as contens:
                         self.users_data[-1]["contents"].append(contens.read())
 
         return self.users_data
@@ -44,7 +44,14 @@ class ReadFiles:
         return point/texts_num
 
     def outputFiles(self):
-        pass
+        users_data = self.loadFiles()
+        savedata_path = os.path.join(self.path_to_files, 'savedata', 'output.csv')
+        for user in users_data:
+            write_data = user['username'] + ','
+            write_data += ','.join([str(self.analytics(text)) for text in user['contents']])
+            with open(savedata_path, 'a') as f:
+                print(write_data, file=f)
+
 
     def __make_dict(self):
         pn_ja = pd.read_csv('./dict/pn_ja.dic', sep=':',encoding='cp932', names=('Tango','Yomi','Hinshi', 'Score'))
