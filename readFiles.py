@@ -22,7 +22,8 @@ class ReadFiles:
                 for f3 in level3:
                     with open(f3) as contens:
                         self.users_data[-1]["contents"].append(contens.read())
-        print(self.users_data)
+
+        return self.users_data
 
     def outputFiles(self):
         pass
