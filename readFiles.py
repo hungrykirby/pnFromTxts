@@ -21,15 +21,16 @@ class ReadFiles:
         level1 = glob.glob(os.path.join(self.path_to_files, 'txtdata', '*'))
         for f in level1:
             level2 = glob.glob(os.path.join(f, "*"))
+            category = os.path.basename(f)
             for f2 in level2:
                 level3 = glob.glob(os.path.join(f2, '*.txt'))
-                print(os.path.basename(f2))
+                #print(os.path.basename(f2))
                 username = os.path.basename(f2)
-                self.users_data.append({"username": username, "contents": []})
+                self.users_data.append({"category": category, "username": username, "contents": []})
                 for f3 in level3:
-                    with open(f3, 'r', encoding='CP932', errors='ignore') as contens:
+                    with open(f3, 'r', encoding='utf-8', errors='ignore') as contens:
                         self.users_data[-1]["contents"].append(contens.read())
-
+        print(self.users_data)
         return self.users_data
 
     def analytics(self, text):
@@ -47,7 +48,8 @@ class ReadFiles:
         users_data = self.loadFiles()
         savedata_path = os.path.join(self.path_to_files, 'savedata', 'output.csv')
         for user in users_data:
-            write_data = user['username'] + ','
+            write_data = user['category'] + ','
+            write_data += user['username'] + ','
             write_data += ','.join([str(self.analytics(text)) for text in user['contents']])
             with open(savedata_path, 'a') as f:
                 print(write_data, file=f)
